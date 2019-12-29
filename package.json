@@ -1,0 +1,55 @@
+{
+  "name": "@progfay/scrapbox-parser-stream",
+  "version": "1.0.0",
+  "description": "Parsing Scrapbox notation with Node.js Stream",
+  "files": [
+    "lib"
+  ],
+  "main": "lib/index.js",
+  "types": "./lib/index.d.ts",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/core-js": "^2.5.2",
+    "@types/jest": "^24.0.15",
+    "@types/node": "^12.0.8",
+    "@typescript-eslint/eslint-plugin": "^2.12.0",
+    "@typescript-eslint/parser": "^2.12.0",
+    "coveralls": "^3.0.4",
+    "eslint": "^5.16.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-jest": "^23.1.1",
+    "eslint-plugin-node": "^9.1.0",
+    "eslint-plugin-standard": "^4.0.0",
+    "jest": "^24.8.0",
+    "ts-jest": "^24.0.2",
+    "typescript": "^3.7.3"
+  },
+  "scripts": {
+    "prebuild": "rm -rf lib",
+    "build": "tsc -p ./tsconfig.json",
+    "prepare": "npm run build",
+    "test": "jest --coverage",
+    "test:update": "jest --updateSnapshot",
+    "coverage": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint --fix . --ext .ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/progfay/scrapbox-parser-stream.git"
+  },
+  "keywords": [
+    "scrapbox",
+    "parser",
+    "stream"
+  ],
+  "author": "progfay",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/progfay/scrapbox-parser-stream/issues"
+  },
+  "homepage": "https://github.com/progfay/scrapbox-parser-stream#readme",
+  "publishConfig": {
+    "access": "public"
+  }
+}
