@@ -1,8 +1,9 @@
 import * as fs from 'fs'
 import { PassThrough, TransformCallback } from 'stream'
-import { parse, ScrapboxParserStream, BlockType } from '../../src'
+import { parse, BlockType } from '@progfay/scrapbox-parser'
+import { ScrapboxParserStream } from '../src'
 
-const FILE_PATH = './tests/stream/body.txt'
+const FILE_PATH = './tests/body.txt'
 
 class CheckStream<T> extends PassThrough {
   done: jest.DoneCallback
