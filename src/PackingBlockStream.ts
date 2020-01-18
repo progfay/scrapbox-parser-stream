@@ -1,11 +1,14 @@
 import { Transform, TransformCallback } from 'stream'
-import { ParserOptionType, BlockComponentType, CodeBlockComponentType, TableComponentType } from '@progfay/scrapbox-parser'
-
-export type PackingComponentType = ((CodeBlockComponentType | TableComponentType) & { indent: number, components: BlockComponentType[] }) | null
+import { ParserOptionType } from '@progfay/scrapbox-parser'
+import { TitleComponentType } from '@progfay/scrapbox-parser/lib/block/Title'
+import { BlockComponentType } from '@progfay/scrapbox-parser/lib/block/BlockComponent'
+import { LineComponentType } from '@progfay/scrapbox-parser/lib/block/Line'
+import { CodeBlockComponentType } from '@progfay/scrapbox-parser/lib/block/CodeBlock'
+import { TableComponentType } from '@progfay/scrapbox-parser/lib/block/Table'
 
 export default class PackingStream extends Transform {
   shouldPackTitle: boolean
-  packingComponent: PackingComponentType = null
+  packingComponent: ((CodeBlockComponentType | TableComponentType) & { indent: number }) | null = null
 
   constructor ({ hasTitle }: ParserOptionType) {
     super({ objectMode: true })
@@ -13,25 +16,25 @@ export default class PackingStream extends Transform {
   }
 
   _transform (blockComponent: BlockComponentType, _encoding: string, callback: TransformCallback): void {
-    const { indent, text } = blockComponent
-
-    if (this.shouldPackTitle) {
-      callback(null, {
-        type: 'title',
-        text: blockComponent.text
-      })
-      this.shouldPackTitle = false
-      return
+  if (this.shouldPackTitle) {
+    const titleBlockComponent: TitleComponentType  = {
+      type: 'title',
+      text: blockComponent.text
     }
+    callback(null, titleBlockComponent)
+    return
+  }
 
+    const { indent, text } = blockComponent
     if (this.packingComponent) {
       if (indent > this.packingComponent.indent) {
         this.packingComponent.components.push(blockComponent)
         callback()
         return
       } else {
-        this.push(this.packingComponent)
+        callback(null, this.packingComponent)
         this.packingComponent = null
+        return
       }
     }
 
@@ -40,18 +43,19 @@ export default class PackingStream extends Transform {
     if (isCodeBlock || isTable) {
       this.packingComponent = {
         type: isCodeBlock ? 'codeBlock' : 'table',
-        components: [ blockComponent ],
+        components: [blockComponent],
         indent
-      } as PackingComponentType
+      } as ((CodeBlockComponentType | TableComponentType) & { indent: number })
+      callback()
+      return
     } else {
-      this.push(
-        {
-          type: 'line',
-          component: blockComponent
-        }
-      )
+      const lineComponent: LineComponentType = {
+        type: 'line',
+        component: blockComponent
+      }
+      callback(null, lineComponent)
+      return
     }
-    callback()
   }
 
   _final (callback: TransformCallback) {

@@ -1,5 +1,5 @@
 import { Transform, TransformCallback } from 'stream'
-import { BlockComponentType } from '@progfay/scrapbox-parser'
+import { BlockComponentType } from '@progfay/scrapbox-parser/lib/block/BlockComponent'
 
 const convertToBlockComponent = (block: string): BlockComponentType => ({
   indent: block.match(/^\s+/)?.[0].length ?? 0,

@@ -1,5 +1,6 @@
 import { Transform, TransformCallback } from 'stream'
-import { convertToBlock, PackedBlockComponentType } from '@progfay/scrapbox-parser'
+import { convertToBlock } from '@progfay/scrapbox-parser/lib/block'
+import { PackedBlockComponentType } from '@progfay/scrapbox-parser/lib/block/PackedBlockComponent'
 
 export default class ParserStream extends Transform {
   constructor () {
