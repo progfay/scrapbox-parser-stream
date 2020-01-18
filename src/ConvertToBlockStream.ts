@@ -23,6 +23,7 @@ export default class ConvertToBlockStream extends Transform {
   }
 
   _final (callback: TransformCallback) {
-    callback(null, convertToBlockComponent(this.rest))
+    if (this.rest !== '') this.push(convertToBlockComponent(this.rest))
+    return callback()
   }
 }

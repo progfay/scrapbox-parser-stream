@@ -17,24 +17,23 @@ export default class PackingStream extends Transform {
 
   _transform (blockComponent: BlockComponentType, _encoding: string, callback: TransformCallback): void {
   if (this.shouldPackTitle) {
+    this.shouldPackTitle = false
     const titleBlockComponent: TitleComponentType  = {
       type: 'title',
       text: blockComponent.text
     }
-    callback(null, titleBlockComponent)
-    return
+    this.push(titleBlockComponent)
+    return callback()
   }
 
     const { indent, text } = blockComponent
     if (this.packingComponent) {
       if (indent > this.packingComponent.indent) {
         this.packingComponent.components.push(blockComponent)
-        callback()
-        return
+        return callback()
       } else {
-        callback(null, this.packingComponent)
+        this.push(this.packingComponent)
         this.packingComponent = null
-        return
       }
     }
 
@@ -46,19 +45,19 @@ export default class PackingStream extends Transform {
         components: [blockComponent],
         indent
       } as ((CodeBlockComponentType | TableComponentType) & { indent: number })
-      callback()
-      return
-    } else {
-      const lineComponent: LineComponentType = {
-        type: 'line',
-        component: blockComponent
-      }
-      callback(null, lineComponent)
-      return
+      return callback()
     }
+
+    const lineComponent: LineComponentType = {
+      type: 'line',
+      component: blockComponent
+    }
+    this.push(lineComponent)
+    return callback()
   }
 
-  _final (callback: TransformCallback) {
-    callback(null, this.packingComponent)
+  _final (callback: TransformCallback): void {
+    if (this.packingComponent) this.push(this.packingComponent)
+    return callback()
   }
 }
