@@ -7,7 +7,9 @@
   ],
   "main": "lib/index.js",
   "types": "./lib/index.d.ts",
-  "dependencies": {},
+  "dependencies": {
+    "@progfay/scrapbox-parser": "^4.0.0-0"
+  },
   "devDependencies": {
     "@types/core-js": "^2.5.2",
     "@types/jest": "^24.0.15",
