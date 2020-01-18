@@ -54,4 +54,18 @@ describe('stream', () => {
       .pipe(new ScrapboxParserStream({ hasTitle: false }))
       .pipe(new CheckStream(check, done))
   })
+
+  it('First Block is Title Block without setting ParserOption', async (done) => {
+    const check = () => {
+      let isFirstBlock = true
+      return (block: BlockType) => {
+        if (!isFirstBlock) return
+        isFirstBlock = false
+        expect(block.type).toEqual('title')
+      }
+    }
+    fs.createReadStream(BODY_FILE_PATH, { highWaterMark: 100, encoding: 'utf8' })
+      .pipe(new ScrapboxParserStream())
+      .pipe(new CheckStream(check(), done))
+  })
 })
