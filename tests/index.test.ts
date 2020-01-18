@@ -3,7 +3,8 @@ import { PassThrough, TransformCallback } from 'stream'
 import { parse, BlockType } from '@progfay/scrapbox-parser'
 import { ScrapboxParserStream } from '../src'
 
-const FILE_PATH = './tests/body.txt'
+const BODY_FILE_PATH = './tests/body.txt'
+const TABLE_FILE_PATH = './tests/table.txt'
 
 class CheckStream<T> extends PassThrough {
   done: jest.DoneCallback
@@ -29,21 +30,27 @@ class CheckStream<T> extends PassThrough {
 describe('stream', () => {
   it('Same behavior', async (done) => {
     const generateChecker = () => {
-      const page = fs.readFileSync(FILE_PATH, { encoding: 'utf8' })
+      const page = fs.readFileSync(BODY_FILE_PATH, { encoding: 'utf8' })
       const answer = parse(page, { hasTitle: true })
       return (block: BlockType) => {
         expect(block).toEqual(answer.shift())
       }
     }
 
-    fs.createReadStream(FILE_PATH, { highWaterMark: 100, encoding: 'utf8' })
-      .pipe(new ScrapboxParserStream())
+    fs.createReadStream(BODY_FILE_PATH, { highWaterMark: 100, encoding: 'utf8' })
+      .pipe(new ScrapboxParserStream({ hasTitle: true }))
       .pipe(new CheckStream(generateChecker(), done))
   })
 
-  it('Title Block without `hasTitle` option', async (done) => {
+  it('Parsing only table', async (done) => {
+    fs.createReadStream(TABLE_FILE_PATH, { highWaterMark: 100, encoding: 'utf8' })
+      .pipe(new ScrapboxParserStream({ hasTitle: true }))
+      .pipe(new CheckStream(() => {}, done))
+  })
+
+  it('No Title Block when `hasTitle === false`', async (done) => {
     const check = (block: BlockType) => { expect(block.type).not.toEqual('title') }
-    fs.createReadStream(FILE_PATH, { highWaterMark: 100, encoding: 'utf8' })
+    fs.createReadStream(BODY_FILE_PATH, { highWaterMark: 100, encoding: 'utf8' })
       .pipe(new ScrapboxParserStream({ hasTitle: false }))
       .pipe(new CheckStream(check, done))
   })
