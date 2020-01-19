@@ -16,15 +16,15 @@ export default class PackingStream extends Transform {
   }
 
   _transform (blockComponent: BlockComponentType, _encoding: string, callback: TransformCallback): void {
-  if (this.shouldPackTitle) {
-    this.shouldPackTitle = false
-    const titleBlockComponent: TitleComponentType  = {
-      type: 'title',
-      text: blockComponent.text
+    if (this.shouldPackTitle) {
+      this.shouldPackTitle = false
+      const titleBlockComponent: TitleComponentType = {
+        type: 'title',
+        text: blockComponent.text
+      }
+      this.push(titleBlockComponent)
+      return callback()
     }
-    this.push(titleBlockComponent)
-    return callback()
-  }
 
     const { indent, text } = blockComponent
     if (this.packingComponent) {
