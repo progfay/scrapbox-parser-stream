@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "description": "Parsing Scrapbox notation with Node.js Stream",
   "files": [
-    "lib"
+    "lib",
+    "esm"
   ],
   "main": "lib/index.js",
+  "module": "./esm/index.js",
   "types": "./lib/index.d.ts",
   "dependencies": {
     "@progfay/scrapbox-parser": "^4.0.0-0"
@@ -29,8 +31,11 @@
     "typescript": "^3.7.3"
   },
   "scripts": {
-    "prebuild": "rm -rf lib",
-    "build": "tsc -p ./tsconfig.json",
+    "build": "npm run build:cjs && npm run build:esm",
+    "prebuild:cjs": "rm -rf lib",
+    "build:cjs": "tsc -p ./tsconfig.cjs.json",
+    "prebuild:esm": "rm -rf esm",
+    "build:esm": "tsc -p ./tsconfig.esm.json",
     "prepare": "npm run build",
     "test": "jest --coverage",
     "test:update": "jest --updateSnapshot",
