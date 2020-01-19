@@ -29,6 +29,7 @@
   "scripts": {
     "prebuild": "rm -rf lib",
     "build:cjs": "tsc -p ./tsconfig.cjs.json",
+    "build:esm": "tsc -p ./tsconfig.esm.json",
     "prepare": "npm run build",
     "test": "jest --coverage",
     "test:update": "jest --updateSnapshot",
