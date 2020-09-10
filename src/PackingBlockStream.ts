@@ -1,24 +1,24 @@
 import { Transform, TransformCallback } from 'stream'
-import { ParserOptionType } from '@progfay/scrapbox-parser'
-import { TitleComponentType } from '@progfay/scrapbox-parser/lib/block/Title'
-import { BlockComponentType } from '@progfay/scrapbox-parser/lib/block/BlockComponent'
-import { LineComponentType } from '@progfay/scrapbox-parser/lib/block/Line'
-import { CodeBlockComponentType } from '@progfay/scrapbox-parser/lib/block/CodeBlock'
-import { TableComponentType } from '@progfay/scrapbox-parser/lib/block/Table'
+import { ParserOption } from '@progfay/scrapbox-parser'
+import { TitleComponent } from '@progfay/scrapbox-parser/lib/block/Title'
+import { BlockComponent } from '@progfay/scrapbox-parser/lib/block/BlockComponent'
+import { LineComponent } from '@progfay/scrapbox-parser/lib/block/Line'
+import { CodeBlockComponent } from '@progfay/scrapbox-parser/lib/block/CodeBlock'
+import { TableComponent } from '@progfay/scrapbox-parser/lib/block/Table'
 
 export default class PackingStream extends Transform {
   shouldPackTitle: boolean
-  packingComponent: ((CodeBlockComponentType | TableComponentType) & { indent: number }) | null = null
+  packingComponent: ((CodeBlockComponent | TableComponent) & { indent: number }) | null = null
 
-  constructor ({ hasTitle }: ParserOptionType) {
+  constructor ({ hasTitle }: ParserOption) {
     super({ objectMode: true })
     this.shouldPackTitle = hasTitle
   }
 
-  _transform (blockComponent: BlockComponentType, _encoding: string, callback: TransformCallback): void {
+  _transform (blockComponent: BlockComponent, _encoding: string, callback: TransformCallback): void {
     if (this.shouldPackTitle) {
       this.shouldPackTitle = false
-      const titleBlockComponent: TitleComponentType = {
+      const titleBlockComponent: TitleComponent = {
         type: 'title',
         text: blockComponent.text
       }
@@ -44,11 +44,11 @@ export default class PackingStream extends Transform {
         type: isCodeBlock ? 'codeBlock' : 'table',
         components: [blockComponent],
         indent
-      } as ((CodeBlockComponentType | TableComponentType) & { indent: number })
+      } as ((CodeBlockComponent | TableComponent) & { indent: number })
       return callback()
     }
 
-    const lineComponent: LineComponentType = {
+    const lineComponent: LineComponent = {
       type: 'line',
       component: blockComponent
     }

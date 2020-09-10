@@ -1,6 +1,6 @@
 import * as fs from 'fs'
 import { PassThrough, TransformCallback } from 'stream'
-import { parse, BlockType } from '@progfay/scrapbox-parser'
+import { parse, Block } from '@progfay/scrapbox-parser'
 import { ScrapboxParserStream } from '../src'
 
 const BODY_FILE_PATH = './tests/body.txt'
@@ -32,7 +32,7 @@ describe('stream', () => {
     const generateChecker = () => {
       const page = fs.readFileSync(BODY_FILE_PATH, { encoding: 'utf8' })
       const answer = parse(page, { hasTitle: true })
-      return (block: BlockType) => {
+      return (block: Block) => {
         expect(block).toEqual(answer.shift())
       }
     }
@@ -49,7 +49,7 @@ describe('stream', () => {
   })
 
   it('No Title Block when `hasTitle === false`', async (done) => {
-    const check = (block: BlockType) => { expect(block.type).not.toEqual('title') }
+    const check = (block: Block) => { expect(block.type).not.toEqual('title') }
     fs.createReadStream(BODY_FILE_PATH, { highWaterMark: 100, encoding: 'utf8' })
       .pipe(new ScrapboxParserStream({ hasTitle: false }))
       .pipe(new CheckStream(check, done))
@@ -58,7 +58,7 @@ describe('stream', () => {
   it('First Block is Title Block without setting ParserOption', async (done) => {
     const check = () => {
       let isFirstBlock = true
-      return (block: BlockType) => {
+      return (block: Block) => {
         if (!isFirstBlock) return
         isFirstBlock = false
         expect(block.type).toEqual('title')
