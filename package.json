@@ -10,25 +10,25 @@
   "module": "./esm/index.js",
   "types": "./lib/index.d.ts",
   "dependencies": {
-    "@progfay/scrapbox-parser": "^6.0.0"
+    "@progfay/scrapbox-parser": "^6.0.1"
   },
   "devDependencies": {
     "@types/core-js": "^2.5.4",
-    "@types/jest": "^26.0.13",
-    "@types/node": "^14.6.4",
-    "@typescript-eslint/eslint-plugin": "^4.1.0",
-    "@typescript-eslint/parser": "^4.1.0",
+    "@types/jest": "^26.0.15",
+    "@types/node": "^14.14.6",
+    "@typescript-eslint/eslint-plugin": "^4.6.0",
+    "@typescript-eslint/parser": "^4.6.0",
     "coveralls": "^3.1.0",
-    "eslint": "^7.8.1",
-    "eslint-config-standard": "^14.1.1",
-    "eslint-plugin-import": "^2.22.0",
-    "eslint-plugin-jest": "^24.0.0",
+    "eslint": "^7.12.1",
+    "eslint-config-standard": "^16.0.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jest": "^24.1.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.1",
-    "jest": "^26.4.2",
-    "ts-jest": "^26.3.0",
-    "typescript": "^4.0.2"
+    "eslint-plugin-standard": "^4.0.2",
+    "jest": "^26.6.1",
+    "ts-jest": "^26.4.3",
+    "typescript": "^4.0.5"
   },
   "scripts": {
     "build": "npm run build:cjs && npm run build:esm",
